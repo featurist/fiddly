@@ -1,5 +1,5 @@
 express = require 'express'
-fids repo = require './fids'
+repo = require './repo'
 db = require './db'
 ObjectID = require('mongodb').ObjectID
 
@@ -10,16 +10,13 @@ app.use(express.bodyParser())
 exports.listen (port) =
 
     app.get("/") @(req, res)
-        fids repo.create fid @(err, fid)
+        repo.create fid @(err, fid)
             res.redirect "/#(fid._id)"
 
-    app.get("/:id.json") @(req,res)
-        id = req.params.id
-        db.connect @(err, client)
-            fids = client.collection 'fids'
-            fids.findOne( { "_id" = @new ObjectID(id) }) @(err, doc)
-                res.set header("content-type", 'application/json')
-                res.end (JSON.stringify(doc.contents))
+    app.get("/:id.json") @(req, res)
+        repo.find fid by id (req.params.id) @(err, fid)
+            res.set header("content-type", 'application/json')
+            res.end (JSON.stringify(fid.contents))
     
     app.get("/:id") @(req,res)
         res.sendfile (__dirname + '/public/canvas_fid.html')
