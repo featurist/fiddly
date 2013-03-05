@@ -14,9 +14,6 @@ fid id = read fid id()
 
 window.fiddly = {
 
-    ready (callback) =
-        this.load callback = callback
-
     save (state, callback) =
         fork
             try
@@ -33,8 +30,7 @@ window.fiddly = {
                 else
                     console.log("Error saving fid '#(fid id)'")
         
-    load ()
-        load callback = this.load callback
+    ready (load callback) =
         fork
             try
                 data = ajax! {
@@ -45,6 +41,3 @@ window.fiddly = {
             catch(ex)
                 load callback(null, {message = "Error loading fid '#(fid id)'", detail = ex})
 }
-
-$()
-    window.fiddly.load()

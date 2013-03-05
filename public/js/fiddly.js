@@ -196,10 +196,6 @@
     };
     fidId = readFidId();
     window.fiddly = {
-        ready: function(callback) {
-            var self = this;
-            return this.loadCallback = callback;
-        },
         save: function(state, callback) {
             var self = this;
             return fork(function(continuation) {
@@ -253,9 +249,8 @@
                 }, void 0, continuation);
             });
         },
-        load: function() {
-            var loadCallback;
-            loadCallback = this.loadCallback;
+        ready: function(loadCallback) {
+            var self = this;
             return fork(function(continuation) {
                 var gen8_arguments = Array.prototype.slice.call(arguments, 0, arguments.length - 1);
                 continuation = arguments[arguments.length - 1];
@@ -299,9 +294,6 @@
             });
         }
     };
-    $(function() {
-        return window.fiddly.load();
-    });
 }).call(this);}, "fork": function(exports, require, module) {(function() {
     var self = this;
     var gen1_asyncTry;
