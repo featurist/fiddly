@@ -1,1 +1,1 @@
-web: node app.pogo
+web: ./node_modules/.bin/pogo app.pogo
