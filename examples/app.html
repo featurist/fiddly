@@ -1,0 +1,36 @@
+<html>
+<head>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" ></script>
+
+  <script>
+  	$(document).ready(function(){
+  		    $('canvas').on('mousedown', drawStart);
+		 //   $('canvas').on('mousemove', draw);
+		    $('canvas').on('mouseup', drawEnd);
+		    $('body').on('mouseup', drawEnd);
+
+		 var canvas = document.getElementById('theCanvas');
+     	 var context = canvas.getContext('2d');
+
+		    function drawStart(e){
+		    	context.beginPath();
+		    	context.moveTo(e.clientX, e.clientY);
+		    }
+
+		  
+
+		    function drawEnd(e){
+		    	context.lineTo(e.clientX, e.clientY);
+		    	context.stroke();
+		    }
+
+  	})
+  </script>
+
+</head>
+<body>
+  <canvas height="500" width="500" id="theCanvas">
+    
+  </canvas>
+</body>
+</html>
