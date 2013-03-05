@@ -38,7 +38,7 @@ window.fiddly = {
         fork
             try
                 data = ajax! {
-                    url =  fiddly root + fid id
+                    url =  "#(fiddly root)#(fid id).json"
                     type = "GET"
                 }
                 load callback(data)

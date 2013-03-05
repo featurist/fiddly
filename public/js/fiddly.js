@@ -269,7 +269,7 @@
                         throw new Error("asynchronous function called synchronously");
                     }
                     ajax({
-                        url: fiddlyRoot + fidId,
+                        url: fiddlyRoot + "" + fidId + ".json",
                         type: "GET"
                     }, function(gen10_error, gen11_asyncResult) {
                         var data;
