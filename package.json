@@ -17,6 +17,8 @@
   "author": "",
   "license": "BSD",
   "dependencies": {
-    "pogo": "~0.3.1"
+    "pogo": "~0.3.1",
+    "mongodb": "~1.2.13",
+    "express": "~3.1.0"
   }
 }
