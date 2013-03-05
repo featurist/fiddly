@@ -1,36 +1,55 @@
 <html>
 <head>
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" ></script>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" ></script>
+    
+	<script>
+	var fiddly = {
+		ready: function(callback) {callback([])},
+		save: function(data) {console.log(data)}
+	};
 
-  <script>
-  	$(document).ready(function(){
-  		    $('canvas').on('mousedown', drawStart);
-		 //   $('canvas').on('mousemove', draw);
-		    $('canvas').on('mouseup', drawEnd);
-		    $('body').on('mouseup', drawEnd);
+	$(document).ready(function(){
 
-		 var canvas = document.getElementById('theCanvas');
-     	 var context = canvas.getContext('2d');
+		fiddly.ready(function(data) {
+			$('canvas').on('mousedown', drawStart);
+			$('canvas').on('mouseup', drawEnd);
+			$('body').on('mouseup', drawEnd);
 
-		    function drawStart(e){
-		    	context.beginPath();
-		    	context.moveTo(e.clientX, e.clientY);
-		    }
+			var canvas = document.getElementById('theCanvas');
+			var context = canvas.getContext('2d');
+			var lines = data;
+			var currentLine;
+			var drawStarted = false;
 
-		  
+			function drawStart(e){
+				context.beginPath();
+				context.moveTo(e.clientX, e.clientY);
+				currentLine = {startX : e.clientX, startY:e.clientY};
+				drawStarted = true;
+			}  
 
-		    function drawEnd(e){
-		    	context.lineTo(e.clientX, e.clientY);
-		    	context.stroke();
-		    }
+			function drawEnd(e){
+				if(drawStarted)
+				{
+					context.lineTo(e.clientX, e.clientY);
+					context.stroke();
+					currentLine.endX = e.clientX;
+					currentLine.endY = e.clientY
+					lines.push(currentLine);
+					drawStarted = false;
+					fiddly.save(lines);
+				}
+			}
 
-  	})
-  </script>
+		});
+
+	})
+	</script>
 
 </head>
 <body>
-  <canvas height="500" width="500" id="theCanvas">
-    
-  </canvas>
+	<canvas height="500" width="500" id="theCanvas" style="border: thin solid red;">
+
+	</canvas>
 </body>
 </html>
