@@ -225,7 +225,11 @@
                         } else {
                             try {
                                 data = gen5_asyncResult;
-                                continuation(void 0, callback());
+                                if (callback) {
+                                    continuation(void 0, callback());
+                                } else {
+                                    continuation();
+                                }
                             } catch (gen6_exception) {
                                 continuation(gen6_exception);
                             }
@@ -238,10 +242,14 @@
                         throw new Error("asynchronous function called synchronously");
                     }
                     ex = gen7_arguments[0];
-                    continuation(void 0, callback(null, {
-                        message: "Error saving fid '" + fidId + "'",
-                        detail: ex
-                    }));
+                    if (callback) {
+                        continuation(void 0, callback(null, {
+                            message: "Error saving fid '" + fidId + "'",
+                            detail: ex
+                        }));
+                    } else {
+                        continuation(void 0, console.log("Error saving fid '" + fidId + "'"));
+                    }
                 }, void 0, continuation);
             });
         },

@@ -25,9 +25,13 @@ window.fiddly = {
                     type = "PUT"
                     data = state
                 }
-                callback()
+                if (callback)
+                    callback()
             catch(ex)
-                callback(null, {message = "Error saving fid '#(fid id)'", detail = ex})
+                if (callback)
+                    callback(null, {message = "Error saving fid '#(fid id)'", detail = ex})
+                else
+                    console.log("Error saving fid '#(fid id)'")
         
     load ()
         load callback = this.load callback

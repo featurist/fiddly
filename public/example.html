@@ -15,7 +15,14 @@
     });
     
     save = function() {
-      fiddly.save($('#state').val());
+      //fiddly.save($('#state').val());
+      
+      fiddly.save([{a:1,b:2},1,3,4], function(result, err) {
+        if (err) {
+          alert(JSON.stringify(err))
+        }
+      });
+      
     }
   </script>
   <input id="state" type="text" placeholder="state" /><input type="button" onclick="save()" value="save" />
