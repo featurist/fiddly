@@ -13,4 +13,4 @@ describe 'GET /'
     
     it 'redirects to /<new-fid-id>'
         response = httpism.get ! 'http://localhost:3000/'
-        response.status code.should.equal 302
+        response.url.should.equal "/id"
