@@ -15,7 +15,6 @@
 	$(document).ready(function(){
 
 		fiddly.ready(function(err, data) {
-      console.log(data)
 			$('canvas').on('mousedown', drawStart);
 			$('canvas').on('mousemove', drawEnd);
 			$('body').on('mouseup', stopDrawing);
@@ -27,7 +26,6 @@
 			var drawStarted = false;
       
       lines.forEach(function(line){
-        console.log(line)
         	context.beginPath();				
           context.moveTo(line.startX, line.startY);
 					context.lineTo(line.endX, line.endY);
@@ -55,7 +53,7 @@
 
 			function stopDrawing(){
 				fiddly.save(lines, function(err){
-				  console.log(err)
+				  if (err) console.log(err)
 				});
 				drawStarted = false;
 			}
