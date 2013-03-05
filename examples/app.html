@@ -57,6 +57,12 @@
 				context.lineWidth = $(this).attr('data-width');
 			})
 
+			$('.lineColor').on('click', function(){
+				$('.lineColor').removeClass('selected')
+				$(this).addClass('selected')
+				context.strokeStyle = $(this).attr('data-color');
+			})
+
 		});
 
 	})
@@ -67,7 +73,7 @@
 	<canvas height="500" width="500" id="theCanvas" style="border: thin solid red;">
 
 	</canvas>
-	<div data-width='2' class='lineWidth'>
+	<div data-width='2' class='lineWidth selected'>
 		Thin line
 	</div>
 	<div data-width='4' class='lineWidth'>
@@ -75,6 +81,16 @@
 	</div>
 	<div data-width='6'  class='lineWidth'>
 		Thick line
+	</div>
+
+	<div data-color='red' class='lineColor selected'>
+		Red
+	</div>
+	<div data-color='blue' class='lineColor'>
+		Blue
+	</div>
+	<div data-color='green' class='lineColor'>
+		Green
 	</div>
 
 </body>
