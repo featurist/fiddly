@@ -184,7 +184,7 @@
     };
     ajax = require("ajax").ajax;
     fork = require("fork").fork;
-    fiddlyRoot = "http://fiddly.herokuapp.com/";
+    fiddlyRoot = "/";
     readFidId = function() {
         var matches;
         matches = document.location.pathname.match(/\/(.+)/);
@@ -213,7 +213,9 @@
                     ajax({
                         url: fiddlyRoot + fidId,
                         type: "PUT",
-                        data: state
+                        data: JSON.stringify(state),
+                        dataType: "json",
+                        contentType: "application/json"
                     }, function(gen4_error, gen5_asyncResult) {
                         var data;
                         if (gen4_error) {
@@ -239,7 +241,7 @@
                     }
                     ex = gen7_arguments[0];
                     if (callback) {
-                        continuation(void 0, callback(null, {
+                        continuation(void 0, callback({
                             message: "Error saving fid '" + fidId + "'",
                             detail: ex
                         }));
@@ -265,15 +267,17 @@
                     }
                     ajax({
                         url: fiddlyRoot + "" + fidId + ".json",
-                        type: "GET"
+                        type: "GET",
+                        dataType: "json",
+                        contentType: "application/json"
                     }, function(gen10_error, gen11_asyncResult) {
                         var data;
                         if (gen10_error) {
                             continuation(gen10_error);
                         } else {
                             try {
-                                data = gen11_asyncResult;
-                                continuation(void 0, loadCallback(data));
+                                data = gen11_asyncResult.data;
+                                continuation(void 0, loadCallback(null, data));
                             } catch (gen12_exception) {
                                 continuation(gen12_exception);
                             }
@@ -286,7 +290,7 @@
                         throw new Error("asynchronous function called synchronously");
                     }
                     ex = gen13_arguments[0];
-                    continuation(void 0, loadCallback(null, {
+                    continuation(void 0, loadCallback({
                         message: "Error loading fid '" + fidId + "'",
                         detail: ex
                     }));

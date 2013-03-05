@@ -5,7 +5,7 @@
   <script>require('fiddly')</script>
   
   <script>
-    fiddly.ready(function(state, err) {
+    fiddly.ready(function(err, state) {
        if (err) {
          alert(JSON.stringify(err))
        }
@@ -15,7 +15,7 @@
     });
     
     save = function() {
-      fiddly.save($('#state').val(), function(result, err) {
+      fiddly.save($('#state').val(), function(err, result) {
         if (err) {
           alert(JSON.stringify(err))
         }

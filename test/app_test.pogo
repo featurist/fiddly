@@ -31,4 +31,4 @@ describe 'app'
         
         it 'responds with the fid, as JSON'
             body = httpism.get! "http://localhost:3000/#(fid._id).json".body
-            body.should.equal (JSON.stringify(fid))
+            body.should.equal (JSON.stringify({}))
