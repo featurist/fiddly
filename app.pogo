@@ -2,6 +2,8 @@ mongodb = require 'mongodb'
 express = require 'express'
 
 app = express()
+app.use(express.static('./public'))
+
 /*
 mongo connection string = process.env.MONGOLAB_URI || "mongodb://localhost:27017/fiddly"
 
