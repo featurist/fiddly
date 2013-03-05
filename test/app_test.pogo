@@ -3,7 +3,7 @@ app = require '../app'
 db = require '../db'
 ObjectID = require('mongodb').ObjectID
 
-describe 'GET /'
+describe 'app'
     
     server = nil
     
@@ -13,9 +13,22 @@ describe 'GET /'
     after
         server.close()
     
-    it 'redirects to /<new-fid-id>'
-        response = httpism.get ! 'http://localhost:3000/'
-        last id = db.connect!.collection 'fids'.find().sort( { _id = -1 } ).limit(1).to array!.0._id
-        response.url.should.equal "http://localhost:3000/#(last id)"
-        
+    describe 'GET /'
     
+        it 'redirects to /<new-fid-id>, which renders some HTML'
+            response = httpism.get ! 'http://localhost:3000/'
+            last id = db.connect!.collection 'fids'.find().sort( { _id = -1 } ).limit(1).to array!.0._id
+            response.url.should.equal "http://localhost:3000/#(last id)"
+            response.body.should.match r/<html>/
+    
+    describe 'GET /<fid>.json, after a fid has been created'
+        
+        fid = nil
+        
+        before
+            httpism.get ! 'http://localhost:3000/'
+            fid := db.connect!.collection 'fids'.find().sort( { _id = -1 } ).limit(1).to array!.0
+        
+        it 'responds with the fid, as JSON'
+            body = httpism.get! "http://localhost:3000/#(fid._id).json".body
+            body.should.equal (JSON.stringify(fid))
