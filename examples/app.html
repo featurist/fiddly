@@ -1,6 +1,12 @@
 <html>
 <head>
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" ></script>
+
+	<style>
+		.selected {
+			background-color: lightgreen;
+		}
+	</style>
     
 	<script>
 	var fiddly = {
@@ -20,6 +26,7 @@
 			var lines = data || [];
 			var currentLine;
 			var drawStarted = false;
+
 
 			function drawStart(e){
 				context.beginPath();
@@ -44,6 +51,12 @@
 				drawStarted = false;
 			}
 
+			$('.lineWidth').on('click', function(){
+				$('.lineWidth').removeClass('selected')
+				$(this).addClass('selected')
+				context.lineWidth = $(this).attr('data-width');
+			})
+
 		});
 
 	})
@@ -54,5 +67,15 @@
 	<canvas height="500" width="500" id="theCanvas" style="border: thin solid red;">
 
 	</canvas>
+	<div data-width='2' class='lineWidth'>
+		Thin line
+	</div>
+	<div data-width='4' class='lineWidth'>
+		Medium line
+	</div>
+	<div data-width='6'  class='lineWidth'>
+		Thick line
+	</div>
+
 </body>
 </html>
