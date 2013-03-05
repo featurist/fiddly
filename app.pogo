@@ -1,4 +1,5 @@
 express = require 'express'
+fids repo = require './fids'
 db = require './db'
 ObjectID = require('mongodb').ObjectID
 
@@ -9,10 +10,8 @@ app.use(express.bodyParser())
 exports.listen (port) =
 
     app.get("/") @(req, res)
-        db.connect @(err, client)
-            fids = client.collection 'fids'
-            fids.insert {contents = {} } @(err, fid)
-                res.redirect "/#(fid.0._id)"
+        fids repo.create fid @(err, fid)
+            res.redirect "/#(fid._id)"
 
     app.get("/:id.json") @(req,res)
         id = req.params.id
