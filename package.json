@@ -1,19 +1,30 @@
 {
   "name": "fiddly",
   "version": "0.0.0",
-  "description": "Fiddly ======",
+  "description": "Fiddly",
   "main": "index.js",
+  "engines": {
+    "node": "0.8.x",
+    "npm": "1.1.x"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha test/*_test.pogo"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/featurist/fiddly.git"
+    "url": "git://github.com/featurist/fiddly.git"
   },
-  "author": "",
+  "author": "Featurist and friends",
   "license": "BSD",
   "dependencies": {
-    "stitchy": "0.0.6",
-    "pogo": "~0.3.1"
+    "pogo": "~0.3.1",
+    "mongodb": "~1.2.13",
+    "express": "~3.1.0",
+    "should": "~1.2.2",
+    "mocha": "~1.8.1",
+    "httpism": "0.0.3"
+  },
+  "devDependencies": {
+     "stitchy": "0.0.6"
   }
 }

@@ -11,7 +11,7 @@ Ensures the user has a user-id cookie, creates a fiddle with a unique id, redire
 #### GET '/:fiddle-id'
 Renders the fiddle and provides an app-specific editing interface.
 
-#### POST '/:fiddle-id'
+#### PUT '/:fiddle-id'
 If the current user was the creator of the fiddle, it saves.
 
 If the current user was not the creator of the fiddle, it forks, creating a new fiddle owned by the current user, then
