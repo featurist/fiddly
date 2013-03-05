@@ -1,0 +1,23 @@
+<html>
+<body>
+  <script src="js/jquery-1.9.1.min.js"></script>
+  <script src="js/fiddly.js"></script>
+  <script>require('fiddly')</script>
+  
+  <script>
+    fiddly.ready(function(state, err) {
+       if (err) {
+         alert(JSON.stringify(err))
+       }
+       else {
+         $('#state').val(state);
+       }
+    });
+    
+    save = function() {
+      fiddly.save($('#state').val());
+    }
+  </script>
+  <input id="state" type="text" placeholder="state" /><input type="button" onclick="save()" value="save" />
+</body>
+</html>
