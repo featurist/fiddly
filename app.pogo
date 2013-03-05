@@ -21,7 +21,7 @@ exports.listen (port) =
             fids.insert { a = 2 } @(err, fid)
                 res.redirect "/#(fid.0._id)"
     
-    app.get("/id") @(req,res)
-        res.end "HI"
+    app.get("/:id") @(req,res)
+        res.sendfile (__dirname + '/public/canvas_fid.html')
         
     app.listen(port, "0.0.0.0")    
