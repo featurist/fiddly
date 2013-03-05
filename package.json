@@ -1,0 +1,22 @@
+{
+  "name": "fiddly",
+  "version": "0.0.0",
+  "description": "Fiddly",
+  "main": "index.js",
+  "engines": {
+    "node": "0.8.x",
+    "npm": "1.1.x"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/featurist/fiddly.git"
+  },
+  "author": "",
+  "license": "BSD",
+  "dependencies": {
+    "pogo": "~0.3.1"
+  }
+}
