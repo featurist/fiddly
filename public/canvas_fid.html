@@ -1,7 +1,8 @@
 <html>
 <head>
 	<script src="/js/jquery-1.9.1.min.js" ></script>
-	<script src="/js/fiddly.js"></script>
+  <script src="/js/underscore-min.js" ></script>
+  <script src="/js/fiddly.js"></script>
 	<script>require('fiddly')</script>
 
 	<style>
@@ -12,69 +13,97 @@
     
 	<script>
 
+  function Artist (context, lines, fiddly, _) {
+    var public = {},
+        currentLine,
+        brush = { color:'black', width:2 },
+        drawStarted = false;
+
+    function paintLine(line)
+     {
+       context.strokeStyle = line.color;
+       context.lineWidth = line.width;
+       context.beginPath();
+       context.moveTo(line.startX, line.startY);
+       context.lineTo(line.endX, line.endY);
+       context.stroke();
+     }
+
+    public.pickBrushColor = function(color)
+    {
+      brush.color = color;
+    }
+
+    public.pickBrushWidth = function(width)
+    {
+      brush.width = width;
+    }
+
+    public.drawStart = function(e)
+    {
+      currentLine = {
+        startX : e.offsetX, startY:e.offsetY,
+        width:brush.width, color:brush.color
+      };
+      drawStarted = true;
+    }
+
+    public.paintThatLine = function(e)
+    {
+      if(drawStarted) {
+        currentLine.endX = e.offsetX;
+        currentLine.endY = e.offsetY;
+        paintLine( currentLine);
+        lines.push(currentLine);
+        currentLine.startX = e.offsetX;
+        currentLine.startY = e.offsetY;
+      }
+    }
+
+    public.stopDrawing = function(){
+      fiddly.save(lines);
+      drawStarted = false;
+    }
+
+    public.paintLines = function(lines){
+      _.each(lines ,function(line){
+        paintLine(line)
+      });
+    }
+
+    return public;
+  };
+
+
 	$(document).ready(function(){
 
-		fiddly.ready(function(err, data) {
-      $('canvas').on('mousedown', drawStart);
-      $('canvas').on('mousemove', drawEnd);
-      $('body').on('mouseup', stopDrawing);
+    var fiddly = {
+    		ready: function(callback) {callback()},
+    		save: function(data) {console.log(data)}
+    	};
 
+		fiddly.ready(function(err, data) {
       var canvas = document.getElementById('theCanvas');
       var context = canvas.getContext('2d');
       var lines = data || [];
-      var currentLine;
-      var drawingTool = { color:'black', width:2 }
-      var drawStarted = false;
 
+      var artist = new Artist(context, lines, fiddly, _)
+      artist.paintLines(lines)
 
-      function paintLine(line)
-      {
-        context.strokeStyle = line.color;
-        context.lineWidth = line.width;
-        context.beginPath();
-        context.moveTo(line.startX, line.startY);
-        context.lineTo(line.endX, line.endY);
-        context.stroke();
-      }
-
-      function drawStart(e){
-        currentLine = {
-          startX : e.offsetX, startY:e.offsetY,
-          width:drawingTool.width, color:drawingTool.color
-        };
-        drawStarted = true;
-      }
-
-      function drawEnd(e){
-        if(drawStarted)
-        {
-          currentLine.endX = e.offsetX;
-          currentLine.endY = e.offsetY;
-
-          paintLine( currentLine);
-          lines.push(currentLine);
-
-          currentLine.startX = e.offsetX;
-          currentLine.startY = e.offsetY;
-        }
-
-      }
-
-      function stopDrawing(){
-        fiddly.save(lines);
-        drawStarted = false;
-      }
+      $('canvas').on('mousedown', artist.drawStart);
+      $('canvas').on('mousemove', artist.paintThatLine);
+      $('body').on('mouseup', artist.stopDrawing);
 
       $('.lineWidth').on('click', function(){
         $('.lineWidth').removeClass('selected')
         $(this).addClass('selected')
-        drawingTool.width = $(this).attr('data-width');
+        artist.pickBrushWidth($(this).attr('data-width'));
       })
 
       $('.lineColor').on('click', function(){
         $('.lineColor').removeClass('selected')
         $(this).addClass('selected')
-        drawingTool.color = $(this).attr('data-color');
+        artist.pickBrushColor($(this).attr('data-color'));
       })
 		});
 	})
