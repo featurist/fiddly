@@ -18,20 +18,11 @@ exports.listen (port) =
             res.set header("content-type", 'application/json')
             res.end (JSON.stringify(fid.contents))
     
-    app.get("/:id") @(req,res)
+    app.get("/:id") @(req, res)
         res.sendfile (__dirname + '/public/canvas_fid.html')
         
-    app.put('/:id') @(req,res)
-        id = req.params.id
-        db.connect @(err, client)
-            fids = client.collection 'fids'
-            fids.findOne( { "_id" = @new ObjectID(id) }) @(err, doc)
-               doc.contents = req.body
-               fids.save (doc) @(err)
-                   if (err)
-                       throw (err)
-                   else
-                       res.end ('{}')
-
+    app.put('/:id') @(req, res)
+        repo.update fid contents (req.params.id, req.body) @(err)
+            res.end '{}'
         
     app.listen(port, "0.0.0.0")
