@@ -1,7 +1,6 @@
 httpism = require 'httpism'
 app = require '../app'
 db = require '../db'
-ObjectID = require('mongodb').ObjectID
 
 last fid () =
     db.connect!.collection 'fids'.find().sort( { _id = -1 } ).limit(1).to array!.0

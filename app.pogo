@@ -1,7 +1,5 @@
 express = require 'express'
 repo = require './repo'
-db = require './db'
-ObjectID = require('mongodb').ObjectID
 
 app = express()
 app.use(express.static('./public'))
