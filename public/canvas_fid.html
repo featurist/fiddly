@@ -15,63 +15,68 @@
 	$(document).ready(function(){
 
 		fiddly.ready(function(err, data) {
-			$('canvas').on('mousedown', drawStart);
-			$('canvas').on('mousemove', drawEnd);
-			$('body').on('mouseup', stopDrawing);
+      $('canvas').on('mousedown', drawStart);
+      $('canvas').on('mousemove', drawEnd);
+      $('body').on('mouseup', stopDrawing);
 
-			var canvas = document.getElementById('theCanvas');
-			var context = canvas.getContext('2d');
-			var lines = data || [];
-			var currentLine;
-			var drawStarted = false;
-      
-      lines.forEach(function(line){
-        	context.beginPath();				
-          context.moveTo(line.startX, line.startY);
-					context.lineTo(line.endX, line.endY);
-					context.stroke();
+      var canvas = document.getElementById('theCanvas');
+      var context = canvas.getContext('2d');
+      var lines = data || [];
+      var currentLine;
+      var drawingTool = { color:'black', width:2 }
+      var drawStarted = false;
+
+
+      function paintLine(line)
+      {
+        context.strokeStyle = line.color;
+        context.lineWidth = line.width;
+        context.beginPath();
+        context.moveTo(line.startX, line.startY);
+        context.lineTo(line.endX, line.endY);
+        context.stroke();
+      }
+
+      function drawStart(e){
+        currentLine = {
+          startX : e.offsetX, startY:e.offsetY,
+          width:drawingTool.width, color:drawingTool.color
+        };
+        drawStarted = true;
+      }
+
+      function drawEnd(e){
+        if(drawStarted)
+        {
+          currentLine.endX = e.offsetX;
+          currentLine.endY = e.offsetY;
+
+          paintLine( currentLine);
+          lines.push(currentLine);
+
+          currentLine.startX = e.offsetX;
+          currentLine.startY = e.offsetY;
+        }
+
+      }
+
+      function stopDrawing(){
+        fiddly.save(lines);
+        drawStarted = false;
+      }
+
+      $('.lineWidth').on('click', function(){
+        $('.lineWidth').removeClass('selected')
+        $(this).addClass('selected')
+        drawingTool.width = $(this).attr('data-width');
       })
 
-
-			function drawStart(e){
-				context.beginPath();
-				context.moveTo(e.offsetX, e.offsetY);
-				currentLine = {startX : e.offsetX, startY:e.offsetY};
-				drawStarted = true;
-			}  
-
-			function drawEnd(e){
-				if(drawStarted)
-				{
-					context.lineTo(e.offsetX, e.offsetY);
-					context.stroke();
-					currentLine.endX = e.offsetX;
-					currentLine.endY = e.offsetY
-					lines.push(currentLine);
-				}
-			}
-
-			function stopDrawing(){
-				fiddly.save(lines, function(err){
-				  if (err) console.log(err)
-				});
-				drawStarted = false;
-			}
-
-			$('.lineWidth').on('click', function(){
-				$('.lineWidth').removeClass('selected')
-				$(this).addClass('selected')
-				context.lineWidth = $(this).attr('data-width');
-			})
-
-			$('.lineColor').on('click', function(){
-				$('.lineColor').removeClass('selected')
-				$(this).addClass('selected')
-				context.strokeStyle = $(this).attr('data-color');
-			})
-
+      $('.lineColor').on('click', function(){
+        $('.lineColor').removeClass('selected')
+        $(this).addClass('selected')
+        drawingTool.color = $(this).attr('data-color');
+      })
 		});
-
 	})
 	</script>
 
