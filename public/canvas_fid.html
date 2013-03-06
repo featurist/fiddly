@@ -1,148 +1,146 @@
 <html>
-<head>
-	<script src="/js/jquery-1.9.1.min.js" ></script>
-  <script src="/js/underscore-min.js" ></script>
-  <script src="/js/fiddly.js"></script>
-	<script>require('fiddly')</script>
+  <head>
+    <script src="/js/jquery-1.9.1.min.js"></script>
+    <script src="/js/underscore-min.js"></script>
+    <script src="/js/fiddly.js"></script>
+    <script>require('fiddly')</script>
 
-	<style>
-		.selected {
-			background-color: lightgreen;
-		}
-	</style>
-    
-	<script>
-
-  function Artist (context, lines, fiddly, _) {
-    var public = {},
-        currentLine,
-        brush = { color:'black', width:2 },
-        drawStarted = false;
-
-    function paintLine(line) {
-       context.strokeStyle = line.color;
-       context.lineWidth = line.width;
-       context.beginPath();
-       context.moveTo(line.startX, line.startY);
-       context.lineTo(line.endX, line.endY);
-       context.stroke();
-     }
-
-    // ffs. what year is this?
-    var normalizeEvent = function(event) {
-      if(!event.offsetX) {
-        event.offsetX = (event.pageX - $(event.target).offset().left);
-        event.offsetY = (event.pageY - $(event.target).offset().top);
+    <style>
+      .selected {
+        background-color: lightgreen;
       }
-      return event;
-    };
+    </style>
 
-    public.pickBrushColor = function(color) {
-      brush.color = color;
-    }
+    <script>
 
-    public.pickBrushWidth = function(width) {
-      brush.width = width;
-    }
+      function Artist(context, lines, fiddly, _) {
+        var public = {},
+            currentLine,
+            brush = { color: 'black', width: 2 },
+            drawStarted = false;
 
-    public.drawStart = function(e) {
-      e = normalizeEvent(e);
-      currentLine = {
-        startX : e.offsetX, startY:e.offsetY,
-        width:brush.width, color:brush.color
-      };
-      drawStarted = true;
-    }
+        function paintLine(line) {
+          context.strokeStyle = line.color;
+          context.lineWidth = line.width;
+          context.beginPath();
+          context.moveTo(line.startX, line.startY);
+          context.lineTo(line.endX, line.endY);
+          context.stroke();
+        }
 
-    public.paintThatLine = function(e) {
-      e = normalizeEvent(e);
-      if(drawStarted) {
-        currentLine.endX = e.offsetX;
-        currentLine.endY = e.offsetY;
-        paintLine( currentLine);
-        lines.push(currentLine);
-        currentLine.startX = e.offsetX;
-        currentLine.startY = e.offsetY;
+        // ffs. what year is this?
+        var normalizeEvent = function (event) {
+          if (!event.offsetX) {
+            event.offsetX = (event.pageX - $(event.target).offset().left);
+            event.offsetY = (event.pageY - $(event.target).offset().top);
+          }
+          return event;
+        };
+
+        public.pickBrushColor = function (color) {
+          brush.color = color;
+        }
+
+        public.pickBrushWidth = function (width) {
+          brush.width = width;
+        }
+
+        public.drawStart = function (e) {
+          e = normalizeEvent(e);
+          currentLine = {
+            startX: e.offsetX, startY: e.offsetY,
+            width: brush.width, color: brush.color
+          };
+          drawStarted = true;
+        }
+
+        public.paintThatLine = function (e) {
+          e = normalizeEvent(e);
+          if (drawStarted) {
+            currentLine.endX = e.offsetX;
+            currentLine.endY = e.offsetY;
+            paintLine(currentLine);
+            lines.push(currentLine);
+            currentLine.startX = e.offsetX;
+            currentLine.startY = e.offsetY;
+          }
+        }
+
+        public.stopDrawing = function () {
+          fiddly.save(lines);
+          drawStarted = false;
+        }
+
+        public.paintLines = function (lines) {
+          _.each(lines, function (line) {
+            paintLine(line)
+          });
+        }
+
+        return public;
       }
-    }
 
-    public.stopDrawing = function() {
-      fiddly.save(lines);
-      drawStarted = false;
-    }
+      $(document).ready(function () {
+        fiddly.ready(function (err, data) {
+          var canvas = document.getElementById('theCanvas');
+          var context = canvas.getContext('2d');
+          var lines = data || [];
 
-    public.paintLines = function(lines) {
-      _.each(lines ,function(line){
-        paintLine(line)
-      });
-    }
+          var artist = new Artist(context, lines, fiddly, _)
+          artist.paintLines(lines)
 
-    return public;
-  };
+          $('canvas').on('mousedown', artist.drawStart);
+          $('canvas').on('mousemove', artist.paintThatLine);
+          $('body').on('mouseup', artist.stopDrawing);
 
+          $('.lineWidth').on('click', function () {
+            $('.lineWidth').removeClass('selected')
+            $(this).addClass('selected')
+            artist.pickBrushWidth($(this).attr('data-width'));
+          })
 
-	$(document).ready(function() {
-		fiddly.ready(function(err, data) {
-      var canvas = document.getElementById('theCanvas');
-      var context = canvas.getContext('2d');
-      var lines = data || [];
-
-      var artist = new Artist(context, lines, fiddly, _)
-      artist.paintLines(lines)
-
-      $('canvas').on('mousedown', artist.drawStart);
-      $('canvas').on('mousemove', artist.paintThatLine);
-      $('body').on('mouseup', artist.stopDrawing);
-
-      $('.lineWidth').on('click', function() {
-        $('.lineWidth').removeClass('selected')
-        $(this).addClass('selected')
-        artist.pickBrushWidth($(this).attr('data-width'));
+          $('.lineColor').on('click', function () {
+            $('.lineColor').removeClass('selected')
+            $(this).addClass('selected')
+            artist.pickBrushColor($(this).attr('data-color'));
+          })
+        });
       })
+    </script>
+  </head>
+  <body>
+    <canvas height="500" width="500" id="theCanvas" style="border: thin solid red;">
 
-      $('.lineColor').on('click', function() {
-        $('.lineColor').removeClass('selected')
-        $(this).addClass('selected')
-        artist.pickBrushColor($(this).attr('data-color'));
-      })
-		});
-	})
-	</script>
+    </canvas>
 
-</head>
-<body>
-	<canvas height="500" width="500" id="theCanvas" style="border: thin solid red;">
-
-	</canvas>
-
-	<ul>
-		<li data-width='2' class='lineWidth selected'>
-			Thin line
-		</li>
-		<li data-width='4' class='lineWidth'>
-			Medium line
-		</li>
-		<li data-width='6'  class='lineWidth'>
-			Thick line
-		</li>		
-	</ul>
+    <ul>
+      <li data-width='2' class='lineWidth selected'>
+        Thin line
+      </li>
+      <li data-width='4' class='lineWidth'>
+        Medium line
+      </li>
+      <li data-width='6' class='lineWidth'>
+        Thick line
+      </li>
+    </ul>
 
 
-	<ul>
-		<li data-color='black' class='lineColor selected'>
-			Black
-		</li>
-		<li data-color='red' class='lineColor'>
-			Red
-		</li>
-		<li data-color='blue' class='lineColor'>
-			Blue
-		</li>
-		<li data-color='green' class='lineColor'>
-			Green
-		</li>
-	</ul>
+    <ul>
+      <li data-color='black' class='lineColor selected'>
+        Black
+      </li>
+      <li data-color='red' class='lineColor'>
+        Red
+      </li>
+      <li data-color='blue' class='lineColor'>
+        Blue
+      </li>
+      <li data-color='green' class='lineColor'>
+        Green
+      </li>
+    </ul>
 
 
-</body>
+  </body>
 </html>
