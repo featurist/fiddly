@@ -29,6 +29,15 @@
        context.stroke();
      }
 
+    // ffs. what year is this?
+    var normalizeEvent = function(event) {
+      if(!event.offsetX) {
+        event.offsetX = (event.pageX - $(event.target).offset().left);
+        event.offsetY = (event.pageY - $(event.target).offset().top);
+      }
+      return event;
+    };
+
     public.pickBrushColor = function(color)
     {
       brush.color = color;
@@ -41,6 +50,7 @@
 
     public.drawStart = function(e)
     {
+      e = normalizeEvent(e);
       currentLine = {
         startX : e.offsetX, startY:e.offsetY,
         width:brush.width, color:brush.color
@@ -50,6 +60,7 @@
 
     public.paintThatLine = function(e)
     {
+      e = normalizeEvent(e);
       if(drawStarted) {
         currentLine.endX = e.offsetX;
         currentLine.endY = e.offsetY;
