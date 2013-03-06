@@ -19,8 +19,7 @@
         brush = { color:'black', width:2 },
         drawStarted = false;
 
-    function paintLine(line)
-     {
+    function paintLine(line) {
        context.strokeStyle = line.color;
        context.lineWidth = line.width;
        context.beginPath();
@@ -38,18 +37,15 @@
       return event;
     };
 
-    public.pickBrushColor = function(color)
-    {
+    public.pickBrushColor = function(color) {
       brush.color = color;
     }
 
-    public.pickBrushWidth = function(width)
-    {
+    public.pickBrushWidth = function(width) {
       brush.width = width;
     }
 
-    public.drawStart = function(e)
-    {
+    public.drawStart = function(e) {
       e = normalizeEvent(e);
       currentLine = {
         startX : e.offsetX, startY:e.offsetY,
@@ -58,8 +54,7 @@
       drawStarted = true;
     }
 
-    public.paintThatLine = function(e)
-    {
+    public.paintThatLine = function(e) {
       e = normalizeEvent(e);
       if(drawStarted) {
         currentLine.endX = e.offsetX;
@@ -71,12 +66,12 @@
       }
     }
 
-    public.stopDrawing = function(){
+    public.stopDrawing = function() {
       fiddly.save(lines);
       drawStarted = false;
     }
 
-    public.paintLines = function(lines){
+    public.paintLines = function(lines) {
       _.each(lines ,function(line){
         paintLine(line)
       });
@@ -86,8 +81,7 @@
   };
 
 
-	$(document).ready(function(){
-
+	$(document).ready(function() {
 		fiddly.ready(function(err, data) {
       var canvas = document.getElementById('theCanvas');
       var context = canvas.getContext('2d');
@@ -100,13 +94,13 @@
       $('canvas').on('mousemove', artist.paintThatLine);
       $('body').on('mouseup', artist.stopDrawing);
 
-      $('.lineWidth').on('click', function(){
+      $('.lineWidth').on('click', function() {
         $('.lineWidth').removeClass('selected')
         $(this).addClass('selected')
         artist.pickBrushWidth($(this).attr('data-width'));
       })
 
-      $('.lineColor').on('click', function(){
+      $('.lineColor').on('click', function() {
         $('.lineColor').removeClass('selected')
         $(this).addClass('selected')
         artist.pickBrushColor($(this).attr('data-color'));
