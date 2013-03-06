@@ -88,11 +88,6 @@
 
 	$(document).ready(function(){
 
-    var fiddly = {
-    		ready: function(callback) {callback()},
-    		save: function(data) {console.log(data)}
-    	};
-
 		fiddly.ready(function(err, data) {
       var canvas = document.getElementById('theCanvas');
       var context = canvas.getContext('2d');
