@@ -13,7 +13,7 @@
 
     <script>
 
-      function Artist(context, lines, fiddly, _) {
+      function Artist(context, fid, fiddly, _) {
         var public = {},
             currentLine,
             brush = { color: 'black', width: 2 },
@@ -60,14 +60,14 @@
             currentLine.endX = e.offsetX;
             currentLine.endY = e.offsetY;
             paintLine(currentLine);
-            lines.push(currentLine);
+            fid.lines.push(currentLine);
             currentLine.startX = e.offsetX;
             currentLine.startY = e.offsetY;
           }
         }
 
         public.stopDrawing = function () {
-          fiddly.save(lines);
+          fiddly.save(fid);
           drawStarted = false;
         }
 
@@ -81,13 +81,14 @@
       }
 
       $(document).ready(function () {
-        fiddly.ready(function (err, data) {
+        fiddly.ready(function (err, fid) {
+          if(!fid.lines)
+            fid.lines=[];
           var canvas = document.getElementById('theCanvas');
           var context = canvas.getContext('2d');
-          var lines = data || [];
 
-          var artist = new Artist(context, lines, fiddly, _)
-          artist.paintLines(lines)
+          var artist = new Artist(context, fid, fiddly, _)
+          artist.paintLines(fid.lines)
 
           $('canvas').on('mousedown', artist.drawStart);
           $('canvas').on('mousemove', artist.paintThatLine);
