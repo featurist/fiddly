@@ -45,7 +45,7 @@
           brush.width = width;
         }
 
-        public.drawStart = function (e) {
+        public.positionBrush = function (e) {
           e = normalizeEvent(e);
           currentLine = {
             startX: e.offsetX, startY: e.offsetY,
@@ -54,7 +54,7 @@
           drawStarted = true;
         }
 
-        public.paintThatLine = function (e) {
+        public.paint = function (e) {
           e = normalizeEvent(e);
           if (drawStarted) {
             currentLine.endX = e.offsetX;
@@ -66,7 +66,7 @@
           }
         }
 
-        public.stopDrawing = function () {
+        public.stopPainting = function () {
           fiddly.save(lines);
           drawStarted = false;
         }
@@ -89,9 +89,9 @@
           var artist = new Artist(context, lines, fiddly, _)
           artist.paintLines(lines)
 
-          $('canvas').on('mousedown', artist.drawStart);
-          $('canvas').on('mousemove', artist.paintThatLine);
-          $('body').on('mouseup', artist.stopDrawing);
+          $('canvas').on('mousedown', artist.positionBrush);
+          $('canvas').on('mousemove', artist.paint);
+          $('body').on('mouseup', artist.stopPainting);
 
           $('.lineWidth').on('click', function () {
             $('.lineWidth').removeClass('selected')
