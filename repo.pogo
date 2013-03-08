@@ -1,20 +1,16 @@
 db = require './db'
 ObjectID = require('mongodb').ObjectID
 
+open fids () = db.connect!.collection 'fids'
+
 exports.create fid () =
-    client = db.connect!
-    fids = client.collection 'fids'
-    inserted = fids.insert! { contents = {} }
-    inserted.0
+    open fids!.insert! { contents = {} }.0
 
 exports.find fid by id (id) =
-    client = db.connect!
-    fids = client.collection 'fids'
-    fids.find one!( { "_id" = @new ObjectID(id) })
+    open fids!.find one!( { "_id" = @new ObjectID(id) })
 
 exports.update fid contents (id, contents) =
-    client = db.connect!
-    fids = client.collection 'fids'
+    fids = open fids!
     fid = fids.find one! { "_id" = @new ObjectID(id) }
     fid.contents = contents
     fids.save! (fid)

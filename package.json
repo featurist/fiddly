@@ -25,6 +25,6 @@
      "stitchy": "0.0.6",
      "should": "~1.2.2",
      "mocha": "~1.8.1",
-     "httpism": "0.0.4"
+     "httpism": "git://github.com/featurist/httpism.git#not_just_get"
   }
 }
