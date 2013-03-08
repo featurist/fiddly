@@ -37,6 +37,11 @@
           return event;
         };
 
+        var clone = (function(){
+          return function (obj) { Clone.prototype=obj; return new Clone() };
+          function Clone(){}
+        }());
+
         public.pickBrushColor = function (color) {
           brush.color = color;
         }
@@ -61,6 +66,7 @@
             currentLine.endY = e.offsetY;
             paintLine(currentLine);
             fid.lines.push(currentLine);
+            currentLine = clone(currentLine);
             currentLine.startX = e.offsetX;
             currentLine.startY = e.offsetY;
           }
@@ -84,6 +90,7 @@
         fiddly.ready(function (err, fid) {
           if(!fid.lines)
             fid.lines=[];
+
           var canvas = document.getElementById('theCanvas');
           var context = canvas.getContext('2d');
 
